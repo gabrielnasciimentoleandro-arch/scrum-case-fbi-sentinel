@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="title desc">
+  <title id="title">Ciclo de inspeção e adaptação no Projeto Sentinel</title>
+  <desc id="desc">Fluxo entre backlog, Sprint, incremento, demonstração e feedback.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0l10 5-10 5z" fill="#56698d"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#17233f" flood-opacity=".12"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="500" rx="26" fill="#f4f6fa"/>
+  <text x="600" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#17233f">Do plano estático ao aprendizado contínuo</text>
+  <g font-family="Arial, sans-serif" text-anchor="middle" filter="url(#shadow)">
+    <g transform="translate(55 160)">
+      <rect width="185" height="125" rx="18" fill="#fff" stroke="#dce2ee"/>
+      <circle cx="92" cy="28" r="18" fill="#3559a8"/>
+      <text x="92" y="34" font-size="17" fill="#fff" font-weight="700">1</text>
+      <text x="92" y="72" font-size="18" fill="#17233f" font-weight="700">Backlog</text>
+      <text x="92" y="98" font-size="13" fill="#66738d">priorizado por valor</text>
+    </g>
+    <g transform="translate(285 160)">
+      <rect width="185" height="125" rx="18" fill="#fff" stroke="#dce2ee"/>
+      <circle cx="92" cy="28" r="18" fill="#e85d3f"/>
+      <text x="92" y="34" font-size="17" fill="#fff" font-weight="700">2</text>
+      <text x="92" y="72" font-size="18" fill="#17233f" font-weight="700">Sprint</text>
+      <text x="92" y="98" font-size="13" fill="#66738d">ciclo curto</text>
+    </g>
+    <g transform="translate(515 160)">
+      <rect width="185" height="125" rx="18" fill="#fff" stroke="#dce2ee"/>
+      <circle cx="92" cy="28" r="18" fill="#2c8c7c"/>
+      <text x="92" y="34" font-size="17" fill="#fff" font-weight="700">3</text>
+      <text x="92" y="72" font-size="18" fill="#17233f" font-weight="700">Incremento</text>
+      <text x="92" y="98" font-size="13" fill="#66738d">software demonstrável</text>
+    </g>
+    <g transform="translate(745 160)">
+      <rect width="185" height="125" rx="18" fill="#fff" stroke="#dce2ee"/>
+      <circle cx="92" cy="28" r="18" fill="#8a5aa8"/>
+      <text x="92" y="34" font-size="17" fill="#fff" font-weight="700">4</text>
+      <text x="92" y="72" font-size="18" fill="#17233f" font-weight="700">Demonstração</text>
+      <text x="92" y="98" font-size="13" fill="#66738d">agentes e analistas</text>
+    </g>
+    <g transform="translate(975 160)">
+      <rect width="170" height="125" rx="18" fill="#fff" stroke="#dce2ee"/>
+      <circle cx="85" cy="28" r="18" fill="#d38a23"/>
+      <text x="85" y="34" font-size="17" fill="#fff" font-weight="700">5</text>
+      <text x="85" y="72" font-size="18" fill="#17233f" font-weight="700">Adaptação</text>
+      <text x="85" y="98" font-size="13" fill="#66738d">feedback e melhoria</text>
+    </g>
+  </g>
+  <g stroke="#56698d" stroke-width="3" fill="none" marker-end="url(#arrow)">
+    <path d="M242 222h38"/><path d="M472 222h38"/><path d="M702 222h38"/><path d="M932 222h38"/>
+    <path d="M1060 292v75H148v-75"/>
+  </g>
+  <text x="600" y="405" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#3559a8">TRANSPARÊNCIA → INSPEÇÃO → ADAPTAÇÃO</text>
+  <text x="600" y="438" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#66738d">O conhecimento de cada ciclo reorganiza o trabalho seguinte</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="470" viewBox="0 0 1400 470" role="img" aria-labelledby="title desc">
+  <title id="title">Linha do tempo do Projeto Sentinel</title>
+  <desc id="desc">Principais marcos entre o fracasso do VCF e a auditoria de 2014.</desc>
+  <rect width="1400" height="470" rx="26" fill="#111a31"/>
+  <text x="70" y="65" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#fff">Linha do tempo — Projeto Sentinel</text>
+  <text x="70" y="97" font-family="Arial, sans-serif" font-size="15" fill="#94a7c8">Mudança de método, governança e tecnologia</text>
+  <line x1="100" y1="240" x2="1300" y2="240" stroke="#4e6389" stroke-width="5"/>
+  <g font-family="Arial, sans-serif">
+    <g transform="translate(120 0)">
+      <circle cx="0" cy="240" r="14" fill="#e85d3f"/>
+      <line x1="0" y1="218" x2="0" y2="157" stroke="#e85d3f" stroke-width="2"/>
+      <text x="0" y="137" text-anchor="middle" font-size="20" font-weight="700" fill="#ff8a5b">2005</text>
+      <text x="0" y="115" text-anchor="middle" font-size="14" fill="#d7e0f0">VCF abandonado</text>
+    </g>
+    <g transform="translate(315 0)">
+      <circle cx="0" cy="240" r="14" fill="#3559a8"/>
+      <line x1="0" y1="262" x2="0" y2="325" stroke="#6687cc" stroke-width="2"/>
+      <text x="0" y="354" text-anchor="middle" font-size="20" font-weight="700" fill="#85a6e8">2006</text>
+      <text x="0" y="378" text-anchor="middle" font-size="14" fill="#d7e0f0">Sentinel iniciado</text>
+      <text x="0" y="399" text-anchor="middle" font-size="12" fill="#91a3c1">US$ 425 milhões</text>
+    </g>
+    <g transform="translate(510 0)">
+      <circle cx="0" cy="240" r="14" fill="#d38a23"/>
+      <line x1="0" y1="218" x2="0" y2="157" stroke="#d38a23" stroke-width="2"/>
+      <text x="0" y="137" text-anchor="middle" font-size="20" font-weight="700" fill="#f0ad4e">2009</text>
+      <text x="0" y="115" text-anchor="middle" font-size="14" fill="#d7e0f0">prazo perdido</text>
+    </g>
+    <g transform="translate(705 0)">
+      <circle cx="0" cy="240" r="18" fill="#e85d3f" stroke="#fff" stroke-width="4"/>
+      <line x1="0" y1="265" x2="0" y2="325" stroke="#ff8a5b" stroke-width="2"/>
+      <text x="0" y="354" text-anchor="middle" font-size="20" font-weight="700" fill="#ff8a5b">2010</text>
+      <text x="0" y="378" text-anchor="middle" font-size="14" fill="#fff">virada para Agile</text>
+      <text x="0" y="399" text-anchor="middle" font-size="12" fill="#91a3c1">maior controle interno</text>
+    </g>
+    <g transform="translate(900 0)">
+      <circle cx="0" cy="240" r="14" fill="#8a5aa8"/>
+      <line x1="0" y1="218" x2="0" y2="157" stroke="#a97bc4" stroke-width="2"/>
+      <text x="0" y="137" text-anchor="middle" font-size="20" font-weight="700" fill="#c49adc">2011</text>
+      <text x="0" y="115" text-anchor="middle" font-size="14" fill="#d7e0f0">incrementos e testes</text>
+    </g>
+    <g transform="translate(1095 0)">
+      <circle cx="0" cy="240" r="18" fill="#2c8c7c" stroke="#fff" stroke-width="4"/>
+      <line x1="0" y1="265" x2="0" y2="325" stroke="#46b5a2" stroke-width="2"/>
+      <text x="0" y="354" text-anchor="middle" font-size="20" font-weight="700" fill="#62cfbc">jul. 2012</text>
+      <text x="0" y="378" text-anchor="middle" font-size="14" fill="#fff">implantação geral</text>
+    </g>
+    <g transform="translate(1280 0)">
+      <circle cx="0" cy="240" r="14" fill="#3559a8"/>
+      <line x1="0" y1="218" x2="0" y2="157" stroke="#6687cc" stroke-width="2"/>
+      <text x="0" y="137" text-anchor="middle" font-size="20" font-weight="700" fill="#85a6e8">2014</text>
+      <text x="0" y="115" text-anchor="middle" font-size="14" fill="#d7e0f0">auditoria de uso</text>
+    </g>
+  </g>
+</svg>

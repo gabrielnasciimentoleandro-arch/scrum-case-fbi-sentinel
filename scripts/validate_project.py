@@ -36,7 +36,13 @@ REQUIRED = [
 ]
 
 LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
-PLACEHOLDERS = [r"\bTODO\b", r"\bFIXME\b", r"SEU[_ ]NOME", r"COLE[_ ]AQUI", r"Lorem ipsum"]
+PLACEHOLDERS = [
+    r"\bTODO\b",
+    r"\bFIXME\b",
+    r"SEU[_ ]NOME",
+    r"COLE[_ ]AQUI",
+    r"Lorem ipsum",
+]
 
 
 def markdown_files() -> list[Path]:
@@ -66,10 +72,14 @@ def validate_markdown_links(errors: list[str]) -> None:
             try:
                 resolved.relative_to(ROOT)
             except ValueError:
-                errors.append(f"link sai do repositório em {path.relative_to(ROOT)}: {target}")
+                errors.append(
+                    f"link sai do repositório em {path.relative_to(ROOT)}: {target}"
+                )
                 continue
             if not resolved.exists():
-                errors.append(f"link local quebrado em {path.relative_to(ROOT)}: {target}")
+                errors.append(
+                    f"link local quebrado em {path.relative_to(ROOT)}: {target}"
+                )
 
 
 def validate_content(errors: list[str]) -> None:
@@ -116,7 +126,11 @@ def validate_docx(errors: list[str]) -> None:
             if bad:
                 errors.append(f"DOCX corrompido no item: {bad}")
             names = set(archive.namelist())
-            for expected in {"[Content_Types].xml", "word/document.xml", "docProps/core.xml"}:
+            for expected in (
+                "[Content_Types].xml",
+                "word/document.xml",
+                "docProps/core.xml",
+            ):
                 if expected not in names:
                     errors.append(f"DOCX sem componente: {expected}")
             xml = archive.read("word/document.xml").decode("utf-8")

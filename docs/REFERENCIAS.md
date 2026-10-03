@@ -16,7 +16,7 @@
 
 **U.S. DEPARTMENT OF JUSTICE, OFFICE OF THE INSPECTOR GENERAL.** *The Federal Bureau of Investigation's Implementation of the Sentinel Project*. 2007.
 
-- URL: https://oig.justice.gov/archives/reports/FBI/a0740/findings.htm
+- URL: https://oig.justice.gov/reports/sentinel-audit-iii-status-federal-bureau-investigations-case-management-system-redacted
 - Uso: integração, equipe, requisitos, cronograma e controles.
 - Qualidade: auditoria oficial detalhada.
 

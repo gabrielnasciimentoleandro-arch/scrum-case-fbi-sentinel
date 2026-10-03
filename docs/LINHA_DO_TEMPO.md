@@ -75,7 +75,7 @@ benefícios reais + limitações de uso + evolução contínua
 ## Fontes principais
 
 - [GAO-07-912](https://www.gao.gov/products/gao-07-912)
-- [OIG Audit 07-40](https://oig.justice.gov/archives/reports/FBI/a0740/findings.htm)
+- [OIG Audit 07-40](https://oig.justice.gov/reports/sentinel-audit-iii-status-federal-bureau-investigations-case-management-system-redacted)
 - [OIG Interim Report 12-38](https://www.oversight.gov/sites/default/files/documents/reports/2018-02/a1238.pdf)
 - [FBI Announces Deployment of Sentinel](https://archives.fbi.gov/archives/news/pressrel/press-releases/fbi-announces-deployment-of-sentinel)
 - [OIG Audit 14-31](https://oig.justice.gov/reports/audit-status-federal-bureau-investigations-sentinel-program)

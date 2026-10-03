@@ -9,11 +9,12 @@ Uso:
 from __future__ import annotations
 
 import html
+import os
 import re
-import textwrap
+from collections.abc import Iterable
 from dataclasses import dataclass
+from importlib.util import find_spec
 from pathlib import Path
-from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "docs" / "RESENHA_CRITICA.md"
@@ -72,7 +73,9 @@ def parse_markdown(path: Path) -> list[Block]:
         heading = re.match(r"^(#{2,4})\s+(.+)$", line)
         if heading:
             flush()
-            blocks.append(Block("heading", heading.group(2).strip(), len(heading.group(1)) - 1))
+            blocks.append(
+                Block("heading", heading.group(2).strip(), len(heading.group(1)) - 1)
+            )
             continue
 
         if line.strip() == "---":
@@ -83,7 +86,9 @@ def parse_markdown(path: Path) -> list[Block]:
         reference = re.match(r"^\[\^(\d+)\]:\s*(.+)$", line)
         if reference:
             flush()
-            blocks.append(Block("reference", reference.group(2), number=reference.group(1)))
+            blocks.append(
+                Block("reference", reference.group(2), number=reference.group(1))
+            )
             continue
 
         bullet = re.match(r"^\s*-\s+(.+)$", line)
@@ -105,16 +110,48 @@ def parse_markdown(path: Path) -> list[Block]:
 
 
 def find_font(*names: str) -> Path:
+    """Localiza uma fonte compatível em Linux, macOS, Windows ou ReportLab."""
     candidates = [
         Path("/usr/share/fonts/truetype/dejavu"),
         Path("/usr/share/fonts/truetype/liberation2"),
         Path("/usr/share/fonts/truetype/liberation"),
+        Path("/usr/local/share/fonts"),
+        Path.home() / ".fonts",
+        Path.home() / "Library" / "Fonts",
+        Path("/Library/Fonts"),
+        Path("/System/Library/Fonts"),
+        Path("/System/Library/Fonts/Supplemental"),
     ]
+
+    windows_dir = os.environ.get("WINDIR")
+    if windows_dir:
+        candidates.append(Path(windows_dir) / "Fonts")
+    else:
+        candidates.append(Path("C:/Windows/Fonts"))
+
+    reportlab_spec = find_spec("reportlab")
+    if reportlab_spec and reportlab_spec.submodule_search_locations:
+        reportlab_root = Path(next(iter(reportlab_spec.submodule_search_locations)))
+        # As fontes Vera vêm com o ReportLab e tornam a saída previsível em qualquer SO.
+        candidates.insert(0, reportlab_root / "fonts")
+
     for folder in candidates:
         for name in names:
             path = folder / name
-            if path.exists():
+            if path.is_file():
                 return path
+
+        # Sistemas de arquivos sensíveis a maiúsculas podem ter variações no nome.
+        if folder.is_dir():
+            available = {
+                child.name.casefold(): child
+                for child in folder.iterdir()
+                if child.is_file()
+            }
+            for name in names:
+                if match := available.get(name.casefold()):
+                    return match
+
     raise FileNotFoundError(f"Fonte não encontrada: {', '.join(names)}")
 
 
@@ -139,8 +176,20 @@ def generate_cover_png(path: Path) -> None:
     draw.ellipse((900, 1130, 1530, 1760), fill="#101a34")
     draw.rounded_rectangle((90, 110, 395, 174), radius=32, fill="#2c8c7c")
 
-    regular = find_font("DejaVuSans.ttf", "LiberationSans-Regular.ttf")
-    bold = find_font("DejaVuSans-Bold.ttf", "LiberationSans-Bold.ttf")
+    regular = find_font(
+        "DejaVuSans.ttf",
+        "LiberationSans-Regular.ttf",
+        "Arial.ttf",
+        "arial.ttf",
+        "Vera.ttf",
+    )
+    bold = find_font(
+        "DejaVuSans-Bold.ttf",
+        "LiberationSans-Bold.ttf",
+        "Arial Bold.ttf",
+        "arialbd.ttf",
+        "VeraBd.ttf",
+    )
     font_tag = ImageFont.truetype(str(bold), 26)
     font_kicker = ImageFont.truetype(str(bold), 28)
     font_title = ImageFont.truetype(str(bold), 83)
@@ -150,18 +199,32 @@ def generate_cover_png(path: Path) -> None:
     font_badge = ImageFont.truetype(str(bold), 57)
 
     draw.text((242, 142), "ESTUDO DE CASO", font=font_tag, fill="white", anchor="mm")
-    draw.text((90, 295), "SCRUM  •  AGILE  •  GOVERNO", font=font_kicker, fill="#ff8a5b")
+    draw.text(
+        (90, 295), "SCRUM  •  AGILE  •  GOVERNO", font=font_kicker, fill="#ff8a5b"
+    )
     draw.text((90, 405), "Scrum no FBI", font=font_title, fill="white")
     draw.text((90, 515), "Projeto Sentinel", font=font_subtitle, fill="#d6e0f3")
     draw.rounded_rectangle((90, 610, 740, 618), radius=4, fill="#e85d3f")
-    draw.text((90, 680), "Uma análise crítica sobre agilidade,", font=font_description, fill="#b9c7df")
-    draw.text((90, 728), "governança e transformação digital", font=font_description, fill="#b9c7df")
+    draw.text(
+        (90, 680),
+        "Uma análise crítica sobre agilidade,",
+        font=font_description,
+        fill="#b9c7df",
+    )
+    draw.text(
+        (90, 728),
+        "governança e transformação digital",
+        font=font_description,
+        fill="#b9c7df",
+    )
 
     # Símbolo abstrato: incremento + ciclo de feedback.
     cx, cy = 920, 910
     draw.ellipse((cx - 180, cy - 180, cx + 180, cy + 180), fill="#f7f8fb")
     draw.ellipse((cx - 145, cy - 145, cx + 145, cy + 145), outline="#dce3ef", width=4)
-    draw.rounded_rectangle((cx - 72, cy - 100, cx + 72, cy + 110), radius=58, outline="#17233f", width=18)
+    draw.rounded_rectangle(
+        (cx - 72, cy - 100, cx + 72, cy + 110), radius=58, outline="#17233f", width=18
+    )
     draw.line((cx - 35, cy - 42, cx + 40, cy - 42), fill="#e85d3f", width=16)
     draw.line((cx - 35, cy + 5, cx + 40, cy + 5), fill="#e85d3f", width=16)
     draw.line((cx - 35, cy + 52, cx + 14, cy + 52), fill="#e85d3f", width=16)
@@ -283,7 +346,7 @@ def create_docx(blocks: list[Block], output: Path, cover: Path) -> None:
     from docx import Document
     from docx.enum.section import WD_SECTION
     from docx.enum.style import WD_STYLE_TYPE
-    from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_LINE_SPACING
+    from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
     from docx.oxml import OxmlElement
     from docx.oxml.ns import qn
     from docx.shared import Cm, Pt, RGBColor
@@ -355,7 +418,9 @@ def create_docx(blocks: list[Block], output: Path, cover: Path) -> None:
         style.paragraph_format.space_after = Pt(7)
 
     if "Referência" not in [s.name for s in document.styles]:
-        reference_style = document.styles.add_style("Referência", WD_STYLE_TYPE.PARAGRAPH)
+        reference_style = document.styles.add_style(
+            "Referência", WD_STYLE_TYPE.PARAGRAPH
+        )
         reference_style.base_style = document.styles["Normal"]
         reference_style.font.size = Pt(9)
         reference_style.font.color.rgb = RGBColor.from_string("3F4D66")
@@ -408,13 +473,21 @@ def create_docx(blocks: list[Block], output: Path, cover: Path) -> None:
         if block.kind == "heading":
             if block.text == "Referências":
                 in_references = True
-            style = "Heading 1" if block.level == 1 else "Heading 2" if block.level == 2 else "Heading 3"
+            style = (
+                "Heading 1"
+                if block.level == 1
+                else "Heading 2"
+                if block.level == 2
+                else "Heading 3"
+            )
             paragraph = document.add_paragraph(style=style)
             add_docx_inline(paragraph, block.text)
             continue
 
         if block.kind == "paragraph":
-            paragraph = document.add_paragraph(style="Referência" if in_references else "Normal")
+            paragraph = document.add_paragraph(
+                style="Referência" if in_references else "Normal"
+            )
             add_docx_inline(paragraph, block.text)
             continue
 
@@ -484,7 +557,7 @@ def rl_inline(text: str) -> str:
 def create_pdf(blocks: list[Block], output: Path) -> None:
     try:
         from reportlab.lib import colors
-        from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT
+        from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT
         from reportlab.lib.pagesizes import A4
         from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
         from reportlab.lib.units import cm
@@ -502,16 +575,40 @@ def create_pdf(blocks: list[Block], output: Path) -> None:
             "ReportLab não está instalado. Execute: python -m pip install -r requirements.txt"
         ) from exc
 
-    regular = find_font("DejaVuSans.ttf", "LiberationSans-Regular.ttf")
-    bold = find_font("DejaVuSans-Bold.ttf", "LiberationSans-Bold.ttf")
+    regular = find_font(
+        "DejaVuSans.ttf",
+        "LiberationSans-Regular.ttf",
+        "Arial.ttf",
+        "arial.ttf",
+        "Vera.ttf",
+    )
+    bold = find_font(
+        "DejaVuSans-Bold.ttf",
+        "LiberationSans-Bold.ttf",
+        "Arial Bold.ttf",
+        "arialbd.ttf",
+        "VeraBd.ttf",
+    )
     # Alguns ambientes mínimos oferecem apenas os pesos regular e bold.
     # Neles, o itálico usa a mesma fonte para manter a geração portátil.
     try:
-        italic = find_font("DejaVuSans-Oblique.ttf", "LiberationSans-Italic.ttf")
+        italic = find_font(
+            "DejaVuSans-Oblique.ttf",
+            "LiberationSans-Italic.ttf",
+            "Arial Italic.ttf",
+            "ariali.ttf",
+            "VeraIt.ttf",
+        )
     except FileNotFoundError:
         italic = regular
     try:
-        bold_italic = find_font("DejaVuSans-BoldOblique.ttf", "LiberationSans-BoldItalic.ttf")
+        bold_italic = find_font(
+            "DejaVuSans-BoldOblique.ttf",
+            "LiberationSans-BoldItalic.ttf",
+            "Arial Bold Italic.ttf",
+            "arialbi.ttf",
+            "VeraBI.ttf",
+        )
     except FileNotFoundError:
         bold_italic = bold
     pdfmetrics.registerFont(TTFont("ProjectSans", str(regular)))
@@ -632,19 +729,31 @@ def create_pdf(blocks: list[Block], output: Path) -> None:
         canvas.setFillColor(colors.HexColor("#10182E"))
         canvas.rect(0, 0, page_width, page_height, stroke=0, fill=1)
         canvas.setFillColor(colors.HexColor("#20335A"))
-        canvas.circle(page_width + 1.0 * cm, page_height - 2.8 * cm, 5.8 * cm, stroke=0, fill=1)
+        canvas.circle(
+            page_width + 1.0 * cm, page_height - 2.8 * cm, 5.8 * cm, stroke=0, fill=1
+        )
         canvas.setFillColor(colors.HexColor("#101A34"))
         canvas.circle(page_width + 1.5 * cm, 2.4 * cm, 6.8 * cm, stroke=0, fill=1)
 
         canvas.setFillColor(colors.HexColor(f"#{TEAL}"))
-        canvas.roundRect(2.0 * cm, page_height - 3.6 * cm, 5.3 * cm, 0.75 * cm, 0.35 * cm, stroke=0, fill=1)
+        canvas.roundRect(
+            2.0 * cm,
+            page_height - 3.6 * cm,
+            5.3 * cm,
+            0.75 * cm,
+            0.35 * cm,
+            stroke=0,
+            fill=1,
+        )
         canvas.setFillColor(colors.white)
         canvas.setFont("ProjectSans-Bold", 10)
         canvas.drawCentredString(4.65 * cm, page_height - 3.35 * cm, "ESTUDO DE CASO")
 
         canvas.setFillColor(colors.HexColor("#FF8A5B"))
         canvas.setFont("ProjectSans-Bold", 11)
-        canvas.drawString(2.0 * cm, page_height - 6.0 * cm, "SCRUM  •  AGILE  •  GOVERNO")
+        canvas.drawString(
+            2.0 * cm, page_height - 6.0 * cm, "SCRUM  •  AGILE  •  GOVERNO"
+        )
         canvas.setFillColor(colors.white)
         canvas.setFont("ProjectSans-Bold", 31)
         canvas.drawString(2.0 * cm, page_height - 8.2 * cm, "Scrum no FBI")
@@ -652,11 +761,23 @@ def create_pdf(blocks: list[Block], output: Path) -> None:
         canvas.setFont("ProjectSans", 21)
         canvas.drawString(2.0 * cm, page_height - 9.7 * cm, "Projeto Sentinel")
         canvas.setFillColor(colors.HexColor(f"#{ORANGE}"))
-        canvas.roundRect(2.0 * cm, page_height - 10.8 * cm, 12.2 * cm, 0.08 * cm, 0.04 * cm, stroke=0, fill=1)
+        canvas.roundRect(
+            2.0 * cm,
+            page_height - 10.8 * cm,
+            12.2 * cm,
+            0.08 * cm,
+            0.04 * cm,
+            stroke=0,
+            fill=1,
+        )
         canvas.setFillColor(colors.HexColor("#B9C7DF"))
         canvas.setFont("ProjectSans", 12)
-        canvas.drawString(2.0 * cm, page_height - 12.2 * cm, "Uma análise crítica sobre agilidade,")
-        canvas.drawString(2.0 * cm, page_height - 12.85 * cm, "governança e transformação digital")
+        canvas.drawString(
+            2.0 * cm, page_height - 12.2 * cm, "Uma análise crítica sobre agilidade,"
+        )
+        canvas.drawString(
+            2.0 * cm, page_height - 12.85 * cm, "governança e transformação digital"
+        )
 
         # Ícone vetorial próprio.
         cx, cy = 15.9 * cm, 10.5 * cm
@@ -664,11 +785,21 @@ def create_pdf(blocks: list[Block], output: Path) -> None:
         canvas.circle(cx, cy, 2.65 * cm, stroke=0, fill=1)
         canvas.setStrokeColor(colors.HexColor(f"#{NAVY}"))
         canvas.setLineWidth(5)
-        canvas.roundRect(cx - 1.0 * cm, cy - 1.45 * cm, 2.0 * cm, 2.9 * cm, 0.85 * cm, stroke=1, fill=0)
+        canvas.roundRect(
+            cx - 1.0 * cm,
+            cy - 1.45 * cm,
+            2.0 * cm,
+            2.9 * cm,
+            0.85 * cm,
+            stroke=1,
+            fill=0,
+        )
         canvas.setStrokeColor(colors.HexColor(f"#{ORANGE}"))
         canvas.setLineWidth(4)
         for y_offset, x2 in [(0.75, 0.65), (0.0, 0.65), (-0.75, 0.28)]:
-            canvas.line(cx - 0.52 * cm, cy + y_offset * cm, cx + x2 * cm, cy + y_offset * cm)
+            canvas.line(
+                cx - 0.52 * cm, cy + y_offset * cm, cx + x2 * cm, cy + y_offset * cm
+            )
 
         canvas.setFillColor(colors.white)
         canvas.setFont("ProjectSans-Bold", 12)
@@ -682,19 +813,39 @@ def create_pdf(blocks: list[Block], output: Path) -> None:
         canvas.saveState()
         canvas.setStrokeColor(colors.HexColor("#DCE2EE"))
         canvas.setLineWidth(0.5)
-        canvas.line(2.35 * cm, page_height - 1.45 * cm, page_width - 2.15 * cm, page_height - 1.45 * cm)
+        canvas.line(
+            2.35 * cm,
+            page_height - 1.45 * cm,
+            page_width - 2.15 * cm,
+            page_height - 1.45 * cm,
+        )
         canvas.setFillColor(colors.HexColor(f"#{SLATE}"))
         canvas.setFont("ProjectSans-Bold", 7.7)
-        canvas.drawString(2.35 * cm, page_height - 1.18 * cm, "SCRUM NO FBI  •  PROJETO SENTINEL")
+        canvas.drawString(
+            2.35 * cm, page_height - 1.18 * cm, "SCRUM NO FBI  •  PROJETO SENTINEL"
+        )
         logical_page = canvas.getPageNumber() - 1
         canvas.setFont("ProjectSans", 8)
-        canvas.drawCentredString(page_width / 2, 1.1 * cm, f"DIO  •  PORTFÓLIO  •  {logical_page}")
+        canvas.drawCentredString(
+            page_width / 2, 1.1 * cm, f"DIO  •  PORTFÓLIO  •  {logical_page}"
+        )
         canvas.restoreState()
 
     story = [Spacer(1, 1), PageBreak()]
-    story.append(Paragraph("Scrum no FBI: uma análise crítica do Projeto Sentinel", title_style))
-    story.append(Paragraph("Resenha crítica • Desafio DIO • Outubro de 2026", meta_style))
-    story.append(HRFlowable(width="100%", thickness=2.2, color=colors.HexColor(f"#{ORANGE}"), spaceAfter=12))
+    story.append(
+        Paragraph("Scrum no FBI: uma análise crítica do Projeto Sentinel", title_style)
+    )
+    story.append(
+        Paragraph("Resenha crítica • Desafio DIO • Outubro de 2026", meta_style)
+    )
+    story.append(
+        HRFlowable(
+            width="100%",
+            thickness=2.2,
+            color=colors.HexColor(f"#{ORANGE}"),
+            spaceAfter=12,
+        )
+    )
 
     in_references = False
     for block in blocks:
@@ -704,15 +855,34 @@ def create_pdf(blocks: list[Block], output: Path) -> None:
             style = h1 if block.level == 1 else h2 if block.level == 2 else h3
             story.append(Paragraph(rl_inline(block.text), style))
         elif block.kind == "paragraph":
-            story.append(Paragraph(rl_inline(block.text), reference if in_references else body))
+            story.append(
+                Paragraph(rl_inline(block.text), reference if in_references else body)
+            )
         elif block.kind == "bullet":
             story.append(Paragraph(f"•&nbsp;&nbsp;{rl_inline(block.text)}", bullet))
         elif block.kind == "number":
-            story.append(Paragraph(f"<b>{block.number}.</b>&nbsp;&nbsp;{rl_inline(block.text)}", bullet))
+            story.append(
+                Paragraph(
+                    f"<b>{block.number}.</b>&nbsp;&nbsp;{rl_inline(block.text)}", bullet
+                )
+            )
         elif block.kind == "reference":
-            story.append(Paragraph(f"<b>[{block.number}]</b>&nbsp;&nbsp;{rl_inline(block.text)}", reference))
+            story.append(
+                Paragraph(
+                    f"<b>[{block.number}]</b>&nbsp;&nbsp;{rl_inline(block.text)}",
+                    reference,
+                )
+            )
         elif block.kind == "rule":
-            story.append(HRFlowable(width="100%", thickness=0.7, color=colors.HexColor("#DCE2EE"), spaceBefore=8, spaceAfter=8))
+            story.append(
+                HRFlowable(
+                    width="100%",
+                    thickness=0.7,
+                    color=colors.HexColor("#DCE2EE"),
+                    spaceBefore=8,
+                    spaceAfter=8,
+                )
+            )
 
     output.parent.mkdir(parents=True, exist_ok=True)
     doc.build(story, onFirstPage=draw_cover, onLaterPages=draw_content_page)

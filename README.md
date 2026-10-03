@@ -148,11 +148,15 @@ Os números foram mantidos no contexto em que cada fonte os apresenta. Valores d
 
 ## Execução local
 
+**Requisito:** Python 3.10 ou superior.
+
 Os documentos finais já estão disponíveis em [`entrega/`](entrega/). Para regenerá-los e executar a validação:
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
+source .venv/bin/activate          # Linux ou macOS
+# Windows PowerShell: .\.venv\Scripts\Activate.ps1
+# Windows CMD: .venv\Scripts\activate.bat
 python -m pip install -r requirements.txt
 python scripts/generate_deliverables.py
 python scripts/validate_project.py

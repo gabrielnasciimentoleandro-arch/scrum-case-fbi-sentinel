@@ -141,7 +141,7 @@ Portanto, o sucesso do Sentinel deve ser entendido como uma transformação soci
 
 [^1]: U.S. GOVERNMENT ACCOUNTABILITY OFFICE. *Information Technology: FBI Following a Number of Key Acquisition Practices on New Case Management System but Improvements Still Needed*. GAO-07-912, 2007. Disponível em: <https://www.gao.gov/products/gao-07-912>.
 
-[^2]: U.S. DEPARTMENT OF JUSTICE, OFFICE OF THE INSPECTOR GENERAL. *OIG Audit Report 07-40: The Federal Bureau of Investigation's Implementation of the Sentinel Project*. 2007. Disponível em: <https://oig.justice.gov/archives/reports/FBI/a0740/findings.htm>.
+[^2]: U.S. DEPARTMENT OF JUSTICE, OFFICE OF THE INSPECTOR GENERAL. *OIG Audit Report 07-40: The Federal Bureau of Investigation's Implementation of the Sentinel Project*. 2007. Disponível em: <https://oig.justice.gov/reports/sentinel-audit-iii-status-federal-bureau-investigations-case-management-system-redacted>.
 
 [^3]: U.S. DEPARTMENT OF JUSTICE, OFFICE OF THE INSPECTOR GENERAL. *Interim Report on the FBI's Implementation of the Sentinel Project*. Report 12-38, 2012. Disponível em: <https://www.oversight.gov/sites/default/files/documents/reports/2018-02/a1238.pdf>.
 
